@@ -237,7 +237,7 @@ public class Dictionary {
             try {
                 is = new FileInputStream(extDictName.replace("file://",""));
             } catch (FileNotFoundException e) {
-                System.out.println("找不到文件："+extDictName);
+                System.out.println("找不到扩展词典："+extDictName);
                 continue;
             }
         }else{
@@ -294,7 +294,7 @@ public class Dictionary {
               try {
                   is = new FileInputStream(extStopWordDictName.replace("file://",""));
               } catch (FileNotFoundException e) {
-                  System.out.println("找不到文件："+extStopWordDictName);
+                  System.out.println("找不到扩展停止词典："+extStopWordDictName);
                   continue;
               }
           }else{

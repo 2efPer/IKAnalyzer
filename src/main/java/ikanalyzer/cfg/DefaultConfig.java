@@ -55,8 +55,6 @@ public class DefaultConfig implements Configuration {
     private static final String EXT_DICT = "ext_dict";
     // 配置属性——扩展停止词典
     private static final String EXT_STOP = "ext_stopwords";
-    //配置属性——外部配置文件
-    private static final String EXT_CFG = "ext_cfg";
 
     private Properties props;
     /*
@@ -78,28 +76,17 @@ public class DefaultConfig implements Configuration {
     private DefaultConfig() {
         props = new Properties();
         InputStream input = this.getClass().getClassLoader().getResourceAsStream(FILE_NAME);
-        if (input != null) {
+        String ext_cfg_path = System.getProperty("ext.cfg.path");
+        if(ext_cfg_path!=null && !"".equals(ext_cfg_path)){
+            try {
+                props.loadFromXML(new FileInputStream(ext_cfg_path));
+            } catch (IOException e) {
+                System.out.println("外部配置文件IO异常！");
+//                e.printStackTrace();
+            }
+        }else if (input != null) {
             try {
                 props.loadFromXML(input);
-
-                String ext_cfg = props.getProperty(EXT_CFG);
-                if(ext_cfg!=null && !"".equals(ext_cfg)){
-                    InputStream is =null;
-                    if(ext_cfg.startsWith("{") &&  ext_cfg.endsWith("}")){
-                        String ext_cfg_path = System.getProperty(ext_cfg.substring(1,ext_cfg.length()-2));
-                        try {
-                            is = new FileInputStream(ext_cfg_path);
-                        } catch (FileNotFoundException e) {
-                            System.out.println("文件未找到，请确认文件位置是否准确");
-                        }
-                    }else{
-                        is = new FileInputStream(ext_cfg);
-                    }
-                    if(is!=null){
-                        props.loadFromXML(is);
-                    }
-                }
-
             } catch (InvalidPropertiesFormatException e) {
                 e.printStackTrace();
             } catch (IOException e) {
